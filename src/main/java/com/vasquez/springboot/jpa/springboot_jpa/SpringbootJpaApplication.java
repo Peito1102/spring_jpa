@@ -1,11 +1,13 @@
 package com.vasquez.springboot.jpa.springboot_jpa;
 
 import java.util.List;
+import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vasquez.springboot.jpa.springboot_jpa.entities.Person;
 import com.vasquez.springboot.jpa.springboot_jpa.repositories.PersonRepository;
@@ -27,6 +29,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		create();
 	}
 
+	@Transactional(readOnly = true)
 	private void findOne() {
 		// Person person = null;
 		// Optional<Person> optionalPerson = repository.findById(1L);
@@ -42,6 +45,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		System.out.println("gaaa");
 	}
 
+	@Transactional(readOnly = true)
 	private void list() {
 		//List<Person> persons = (List<Person>) repository.findAll();
 		//List<Person> persons = repository.findByProgrammingLanguage("Java");
@@ -53,10 +57,17 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	}
 
 	private void create() {
-		Person person = new Person(null, "Lalo", "Thor", "Python");
+		Scanner scanner = new Scanner(System.in);
+		String name = scanner.next();
+		String lastname = scanner.next();
+		String programmingLanguage = scanner.next();
+		Person person = new Person(null, name, lastname, programmingLanguage);
+		scanner.close();
 
 		Person personNew = repository.save(person);
 		System.out.println(personNew);
+
+		repository.findById(personNew.getId()).ifPresent(p -> System.out.println(p));
 	}
 
 }

@@ -24,6 +24,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		list();
 		findOne();
+		create();
 	}
 
 	private void findOne() {
@@ -36,7 +37,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 		//repository.findById(1L).ifPresent(person -> System.out.println(person));
 		//repository.findOneName("zo").ifPresent(person -> System.out.println(person));
-		repository.findOneLikeName("zo").ifPresent(person -> System.out.println(person));
+		//repository.findOneLikeName("zo").ifPresent(person -> System.out.println(person));
 		repository.findByNameContaining("to").ifPresent(person -> System.out.println(person));
 		System.out.println("gaaa");
 	}
@@ -49,6 +50,13 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		List<Object[]> personsValues = repository.obtenerPersonData();
 		persons.forEach(p-> System.out.println(p));
 		personsValues.forEach(p-> System.out.println(p[0] + " es experto en: " + p[1]));
+	}
+
+	private void create() {
+		Person person = new Person(null, "Lalo", "Thor", "Python");
+
+		Person personNew = repository.save(person);
+		System.out.println(personNew);
 	}
 
 }

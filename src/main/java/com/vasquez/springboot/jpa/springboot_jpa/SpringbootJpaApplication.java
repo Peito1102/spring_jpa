@@ -1,6 +1,7 @@
 package com.vasquez.springboot.jpa.springboot_jpa;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		list();
-		findOne();
-		create();
+		delete();
 	}
 
 	@Transactional(readOnly = true)
@@ -46,7 +45,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	}
 
 	@Transactional(readOnly = true)
-	private void list() {
+	public void list() {
 		//List<Person> persons = (List<Person>) repository.findAll();
 		//List<Person> persons = repository.findByProgrammingLanguage("Java");
 		List<Person> persons = repository.buscarByProgrammingLanguageAndName("Java", "Renzo");
@@ -56,7 +55,8 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		personsValues.forEach(p-> System.out.println(p[0] + " es experto en: " + p[1]));
 	}
 
-	private void create() {
+	@Transactional
+	public void create() {
 		Scanner scanner = new Scanner(System.in);
 		String name = scanner.next();
 		String lastname = scanner.next();
@@ -68,6 +68,38 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		System.out.println(personNew);
 
 		repository.findById(personNew.getId()).ifPresent(p -> System.out.println(p));
+	}
+
+	@Transactional
+	public void update() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Ingrese el id de la persona:");
+		Long id = scanner.nextLong();
+
+		Optional<Person> optionalPerson = repository.findById(id);
+
+		optionalPerson.ifPresent(person -> {
+			System.out.println("Ingrese el lenguaje de programacion: ");
+			String programmingLanguage = scanner.next();
+			person.setProgrammingLanguage(programmingLanguage);
+			Person personUpdate = repository.save(person);
+			System.out.println(personUpdate);
+		});
+
+		scanner.close();
+	}
+
+	@Transactional
+	public void delete() {
+		repository.findAll().forEach(System.out::println);
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Ingrese el id de la persona a eliminar: ");
+		Long id = scanner.nextLong();
+
+		repository.deleteById(id);
+		repository.findAll().forEach(System.out::println);
+		scanner.close();
 	}
 
 }

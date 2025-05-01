@@ -25,7 +25,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		delete();
+		personalizedQueries();
 	}
 
 	@Transactional(readOnly = true)
@@ -82,8 +82,8 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 			System.out.println("Ingrese el lenguaje de programacion: ");
 			String programmingLanguage = scanner.next();
 			person.setProgrammingLanguage(programmingLanguage);
-			Person personUpdate = repository.save(person);
-			System.out.println(personUpdate);
+			Person personUpdated = repository.save(person);
+			System.out.println(personUpdated);
 		});
 
 		scanner.close();
@@ -100,6 +100,38 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		repository.deleteById(id);
 		repository.findAll().forEach(System.out::println);
 		scanner.close();
+	}
+
+	@Transactional
+	public void delete2() {
+		repository.findAll().forEach(System.out::println);
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Ingrese el id de la persona a eliminar: ");
+		Long id = scanner.nextLong();
+
+		Optional<Person> optionalPerson = repository.findById(id);
+
+		optionalPerson.ifPresentOrElse(person -> repository.delete(person), 
+		() -> System.out.println("Lo sentimos no existe la persona con ese id!"));
+		repository.findAll().forEach(System.out::println);
+		scanner.close();
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("============== consulta solo el nombre por el id ================");
+		System.out.println("Ingresa el id: ");
+		Long id = scanner.nextLong();
+		scanner.close();
+
+		String name = repository.getNameById(id);
+		System.out.println(name);
+
+		String fullName = repository.getFullNameById(id);
+		System.out.println(fullName);
 	}
 
 }

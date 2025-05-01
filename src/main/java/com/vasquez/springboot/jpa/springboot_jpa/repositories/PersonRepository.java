@@ -33,4 +33,13 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
     Optional<Person> findOneLikeName(String name);
 
     Optional<Person> findByNameContaining(String name);
+
+    //------------------------------------------------------------------------------
+
+    @Query("select p.name from Person p where p.id=?1")
+    String getNameById(Long id);
+
+    @Query("select concat(p.name, ' ',p.lastname) as fullname from Person p where p.id=?1")
+    String getFullNameById(Long id);
+
 }

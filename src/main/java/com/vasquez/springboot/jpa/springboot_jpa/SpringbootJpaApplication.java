@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vasquez.springboot.jpa.springboot_jpa.dto.PersonDto;
 import com.vasquez.springboot.jpa.springboot_jpa.entities.Person;
 import com.vasquez.springboot.jpa.springboot_jpa.repositories.PersonRepository;
 
@@ -25,7 +26,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		personalizedQueries();
+		personalizedQueriesDistinc();
 	}
 
 	@Transactional(readOnly = true)
@@ -132,6 +133,44 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 		String fullName = repository.getFullNameById(id);
 		System.out.println(fullName);
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries2() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("============== consulta ================");
+		System.out.println("Ingresa el id: ");
+		Long id = scanner.nextLong();
+		scanner.close();
+
+		String name = repository.getNameById(id);
+		System.out.println(name);
+
+		String fullName = repository.getFullNameById(id);
+		System.out.println(fullName);
+
+		List<PersonDto> personitas = repository.findAllPersonDto();
+		personitas.forEach(System.out::println);
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesDistinc() {
+		System.out.println("=========consultas con nombres de personas===========");
+		List <String> names = repository.findAllNames();
+		names.forEach(System.out::println);
+
+		System.out.println("=========consultas con nombres unicos de personas===========");
+		names = repository.findAllNamesDistinc();
+		names.forEach(System.out::println);
+
+		System.out.println("=========consultas con lenguajes de programacion unicos===========");
+		List<String> languages = repository.findAllProgrammingLanguageDistinc();
+		languages.forEach(System.out::println);
+
+		System.out.println("=========cantidad de lenguajes de programacion unicos===========");
+		List<String> count = repository.findAllProgrammingLanguageDistincCount();
+		System.out.println(count);
 	}
 
 }

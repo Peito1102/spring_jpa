@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.vasquez.springboot.jpa.springboot_jpa.dto.PersonDto;
 import com.vasquez.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person,Long> {
@@ -42,4 +43,22 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
     @Query("select concat(p.name, ' ',p.lastname) as fullname from Person p where p.id=?1")
     String getFullNameById(Long id);
 
+    //----------------------------------------------------------------------------------
+
+    @Query("select new com.vasquez.springboot.jpa.springboot_jpa.dto.PersonDto(p.name, p.lastname) from Person p")
+    List<PersonDto> findAllPersonDto();
+
+    //----------------------------------------------------------------------------------
+
+    @Query("select p.name from Person p")
+    List<String> findAllNames();
+
+    @Query("select distinct(p.name) from Person p")
+    List<String> findAllNamesDistinc();
+
+    @Query("select distinct(p.programmingLanguage) from Person p")
+    List<String> findAllProgrammingLanguageDistinc();
+
+    @Query("select count(distinct(p.programmingLanguage)) from Person p")
+    List<String> findAllProgrammingLanguageDistincCount();
 }

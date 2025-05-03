@@ -26,7 +26,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		personalizedQueriesDistinc();
+		personalizedQueriesBetween();
 	}
 
 	@Transactional(readOnly = true)
@@ -171,6 +171,16 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		System.out.println("=========cantidad de lenguajes de programacion unicos===========");
 		List<String> count = repository.findAllProgrammingLanguageDistincCount();
 		System.out.println(count);
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesBetween() {
+		System.out.println("=========consultas por rangos===========");
+		List<Person> persons = repository.findAllBetweenId(2, 4);
+		persons.forEach(System.out::println);
+
+		persons = repository.findAllBetweenName("J", "P");
+		persons.forEach(System.out::println);
 	}
 
 }

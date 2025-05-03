@@ -61,4 +61,17 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
 
     @Query("select count(distinct(p.programmingLanguage)) from Person p")
     List<String> findAllProgrammingLanguageDistincCount();
+
+    //----------------------------------------------------------------------------------
+    @Query("select p from Person p where p.id between ?1 and ?2 order by p.id")
+    List<Person> findAllBetweenId(Long c1, Long c2);
+
+    @Query("select p from Person p where p.name between ?1 and ?2 order by p.name desc, p.lastname asc")
+    List<Person> findAllBetweenName(String c1, String c2);  
+
+    List<Person> findByIdBetweenOrderByIdDesc(Long id1, Integer id2);
+
+    List<Person> findByNameBetweenOrdenByNameAsc(String name1, String name2);
+
+    List<Person> findByNameBetweenOrdenByNameAscLastnameDesc(String name1, String name2);
 }

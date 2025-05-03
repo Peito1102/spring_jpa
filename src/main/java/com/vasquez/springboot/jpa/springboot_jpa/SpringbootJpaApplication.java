@@ -26,7 +26,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		personalizedQueriesBetween();
+		queriesFunctionAgregation();
 	}
 
 	@Transactional(readOnly = true)
@@ -176,11 +176,26 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Transactional(readOnly = true)
 	public void personalizedQueriesBetween() {
 		System.out.println("=========consultas por rangos===========");
-		List<Person> persons = repository.findAllBetweenId(2, 4);
+		List<Person> persons = repository.findAllBetweenId(2L, 4L);
 		persons.forEach(System.out::println);
 
 		persons = repository.findAllBetweenName("J", "P");
 		persons.forEach(System.out::println);
+
+		persons = repository.findAllByOrderByNameDesc();
+		persons.forEach(System.out::println);
+	}
+
+	@Transactional(readOnly = true)
+	public void queriesFunctionAgregation() {
+		System.out.println("=========consultas con el total de registros de la tabla persona===========");
+		Long count = repository.totalPerson();
+		Long min = repository.minId();
+		Long max = repository.maxId();
+
+		System.out.println("count:" + count);
+		System.out.println("minimo:" + min);
+		System.out.println("maximo:" + max);
 	}
 
 }

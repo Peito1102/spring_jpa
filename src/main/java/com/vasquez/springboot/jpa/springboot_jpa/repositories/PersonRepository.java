@@ -71,7 +71,23 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
 
     List<Person> findByIdBetweenOrderByIdDesc(Long id1, Integer id2);
 
-    List<Person> findByNameBetweenOrdenByNameAsc(String name1, String name2);
+    List<Person> findByNameBetweenOrderByNameAsc(String name1, String name2);
 
-    List<Person> findByNameBetweenOrdenByNameAscLastnameDesc(String name1, String name2);
+    List<Person> findByNameBetweenOrderByNameAscLastnameDesc(String name1, String name2);
+
+    //----------------------------------------------------------------------------------
+    List<Person> findAllByOrderByNameDesc();
+
+    @Query("select p from Person p order by p.name, p.lastname desc")
+    List<Person> getAllOrdered();
+
+    //----------------------------------------------------------------------------------
+    @Query("select count(p)from Person p")
+    Long totalPerson();
+
+    @Query("select min(p.id)from Person p")
+    Long minId();
+
+    @Query("select max(p.id)from Person p")
+    Long maxId();
 }

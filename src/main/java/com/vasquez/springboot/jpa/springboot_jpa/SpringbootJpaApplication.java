@@ -1,5 +1,6 @@
 package com.vasquez.springboot.jpa.springboot_jpa;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -26,7 +27,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		queriesFunctionAgregation();
+		whereIn();
 	}
 
 	@Transactional(readOnly = true)
@@ -196,6 +197,53 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		System.out.println("count:" + count);
 		System.out.println("minimo:" + min);
 		System.out.println("maximo:" + max);
+
+		System.out.println("cosulta con el nombre y su largo");
+		List<Object[]> regs = repository.getPersonNameLength();
+		regs.forEach(reg -> {
+			String name = (String) reg[0]; 
+			Integer length = (Integer) reg[1];
+			System.out.println("name= " + name + ", length= " + length);
+		});
+
+		Integer maximo = repository.getMaxNameLength();
+		Integer minimo = repository.getMinNameLength();
+
+		System.out.println("Nombre de mayor tamaño " + maximo);
+		System.out.println("Nombre de mayor tamaño " + minimo);
+
+		System.out.println("================resumen de funcione de agregacion===========");
+		Object[] resumenReg = (Object[])repository.getResumeAggregationFunction();
+		System.out.println("min: " + resumenReg[0] + ",max: " + resumenReg[1] + 
+		",sum: " + resumenReg[2] + ",avg: " + resumenReg[3] + ",count: " + resumenReg[4]);
+
+
+	}
+
+	@Transactional(readOnly = true)
+	public void subQueries() {
+		System.out.println("========consulta por el nombre mas corto y su largo =======================");
+		List<Object[]> registers = repository.getShorterName();
+		registers.forEach(reg -> {
+			String name = (String) reg[0];
+			Integer length = (Integer) reg[1];
+			System.out.println("name = " + name + ", length = " + length);
+		});
+
+		System.out.println("========consulta para obtener el ultimo registro de persona =======================");
+		Optional<Person> optionalPerson = repository.getLastRegistration();
+		optionalPerson.ifPresent(System.out::println);
+	}
+
+	@Transactional(readOnly = true)
+	public void whereIn() {
+		System.out.println("========consulta where in =======================");
+		List<Person> persons = repository.getPersonsByIds();
+		persons.forEach(System.out::println);
+
+		System.out.println("========consulta where in otra forma =======================");
+		List<Person> persons2 = repository.getPersonsByIds2(Arrays.asList(1L,2L,4L));
+		persons2.forEach(System.out::println);
 	}
 
 }

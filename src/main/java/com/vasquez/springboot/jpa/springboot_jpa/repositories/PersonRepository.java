@@ -90,4 +90,34 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
 
     @Query("select max(p.id)from Person p")
     Long maxId();
+
+    //----------------------------------------------------------------------------------
+    @Query("select p.name, length(p.name) from Person p")
+    List<Object[]> getPersonNameLength();
+
+    @Query("select min(length(p.name)) from Person p")
+    Integer getMinNameLength();
+
+    @Query("select max(length(p.name)) from Person p")
+    Integer getMaxNameLength();
+
+    @Query("select min(p.id), max(p.id), sum(p.id), avg(length(p.name)), count(p.id) from Person p")
+    Object getResumeAggregationFunction();
+
+    //----------------------------------------------------------------------------------
+
+    @Query("select p.name, length(p.name) from Person p where length(p.name) = (select min(length(p.name)) from Person p)")
+    List<Object[]> getShorterName();
+
+    @Query("select p from Person p where p.id = (select max(p.id) from Person p)")
+    Optional<Person> getLastRegistration();
+
+    //----------------------------------------------------------------------------------
+
+    @Query("select p from Person p where p.id in (1,2,5)") // TAMBIEN PUEDE SER NOT IN Y SALEN TODOS QUE NO CONTIENEN ESOS VALORES
+    List<Person> getPersonsByIds();
+
+    @Query("select p from Person p where p.id in ?1") // TAMBIEN PUEDE SER NOT IN Y SALEN TODOS QUE NO CONTIENEN ESOS VALORES
+    List<Person> getPersonsByIds2(List<Long> ids);
+
 }
